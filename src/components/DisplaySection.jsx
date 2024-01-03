@@ -1,9 +1,9 @@
 import React from "react";
 
-function DisplaySection() {
+function DisplaySection({ triggerPreview }) {
   const handleScrollToTop = () => {
-    window.scrollTo({top: 0 , left: 0 , behavior:'smooth'})
-  }
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  };
   return (
     <div className="display-section wrapper">
       <h2 className="title">new</h2>
@@ -11,8 +11,13 @@ function DisplaySection() {
       <span className="description">
         Lorem ipsum dolor sit amet consectetur.
       </span>
-      <button className="button">Try me </button>
-      <button className="back-button" onClick={handleScrollToTop}> Top </button>
+      <button className="button" onClick={triggerPreview}>
+        Try me{" "}
+      </button>
+      <button className="back-button" onClick={handleScrollToTop}>
+        {" "}
+        Top{" "}
+      </button>
     </div>
   );
 }
