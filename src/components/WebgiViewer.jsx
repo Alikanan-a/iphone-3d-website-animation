@@ -27,7 +27,7 @@ import { scrollAnimation } from "../lib/scroll-animation";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WebgiViewer = forwardRef((prompt, ref) => {
+const WebgiViewer = forwardRef((props, ref) => {
   const canvasRef = useRef(null);
   const [viewerRef, setViewerRef] = useState(null);
   const [targetRef, setTargetRef] = useState(null);
@@ -35,7 +35,7 @@ const WebgiViewer = forwardRef((prompt, ref) => {
   const [positionRef, setPositionRef] = useState(null);
   useImperativeHandle(ref, () => ({
     triggerPreview() {
-      props.contentRef.current.style.opacity = "0";
+     props.contentRef.current.style.opacity = "0";
       gsap.to(positionRef, {
         x: 13.05,
         y: -2.01,
