@@ -33,9 +33,13 @@ const WebgiViewer = forwardRef((props, ref) => {
   const [targetRef, setTargetRef] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [positionRef, setPositionRef] = useState(null);
+  const canvasContainerRef = useRef(null);
+  const [previwMode, setPreviwMode] = useState(false);
   useImperativeHandle(ref, () => ({
     triggerPreview() {
-     props.contentRef.current.style.opacity = "0";
+      setPreviwMode(true);
+      canvasContainerRef.current.style.pointerEvents = "all";
+      props.contentRef.current.style.opacity = "0";
       gsap.to(positionRef, {
         x: 13.05,
         y: -2.01,
@@ -52,6 +56,7 @@ const WebgiViewer = forwardRef((props, ref) => {
         z: 0.0,
         duration: 2,
       });
+      viewerRef.scene.activeCamera.setCameraOptions({ controlsEnabled: true });
     },
   }));
 
@@ -113,10 +118,51 @@ const WebgiViewer = forwardRef((props, ref) => {
   useEffect(() => {
     setupViewer();
   }, []);
+  const handleExit = useCallback(() => {
+    canvasContainerRef.current.style.pointerEvents = "none";
+    props.contentRef.current.style.opacity = "1";
+    viewerRef.scene.activeCamera.setCameraOptions({ controlsEnabled: false });
+    setPreviwMode(false);
+    gsap
+      .to(positionRef, {
+        x: 1.56,
+        y: 5.0,
+        z: 0.01,
+        scrollTrigger: {
+          trigger: ".display-section",
+          start: "top bottom",
+          end: " top top",
+          scrub: 2,
+          immediateRender: false,
+        },
+        onUpdate : () => {
+          viewerRef.setDirty()
+          cameraRef.positionTargetUpdated(true)
+        },
+      });
 
+      gsap.to(targetRef, {
+        x: -0.55,
+        y: 0.32,
+        z: 0.0,
+        scrollTrigger: {
+          trigger: ".display-section",
+          start: "top bottom",
+          end: " top top",
+          scrub: 2,
+          immediateRender: false,
+        },
+      });
+  }, [canvasContainerRef, viewerRef , positionRef , cameraRef , targetRef]);
   return (
-    <div id="webgi-canvas-container">
+    <div ref={canvasContainerRef} id="webgi-canvas-container">
       <canvas id="webgi-canvas" ref={canvasRef} />
+      {previwMode && (
+        <button className="button" onClick={handleExit}>
+          {" "}
+          Exit{" "}
+        </button>
+      )}
     </div>
   );
 });
