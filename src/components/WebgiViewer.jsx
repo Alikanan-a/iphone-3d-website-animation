@@ -35,6 +35,7 @@ const WebgiViewer = forwardRef((prompt, ref) => {
   const [positionRef, setPositionRef] = useState(null);
   useImperativeHandle(ref, () => ({
     triggerPreview() {
+      props.contentRef.current.style.opacity = "0";
       gsap.to(positionRef, {
         x: 13.05,
         y: -2.01,
